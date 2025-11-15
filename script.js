@@ -2211,3 +2211,7 @@ applyChartColors();
   loadFpoData();
 
   // If your dashboard hides/shows sections, call updateFpoChart() whenever new data available or when section becomes visible.
+
+
+
+  

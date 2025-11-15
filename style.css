@@ -79,6 +79,36 @@
             line-height: 1.6;
             min-height: 100vh;
         }
+        body {
+    font-family: Inter, system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #123;
+
+    /* 🌈 Gradient background (smooth, premium) */
+    background: linear-gradient(
+        135deg,
+        #eef7f2 0%,
+        #d9f0e3 30%,
+        #c1ebd5 60%,
+        #b2e7cc 100%
+    );
+
+    background-attachment: fixed; /* smooth scrolling */
+}
+
+body {
+    background: linear-gradient(
+        120deg,
+        #e8f9f1 0%,
+        #c6f0d8 40%,
+        #9be8c2 70%,
+        #7bdcae 100%
+    );
+}
+
+
+
 
         .container {
             max-width: var(--max-width);
@@ -286,6 +316,77 @@
             transform: scale(0.95);
         }
 
+        /* ---- Tightened nav spacing (consolidation) ---- */
+nav {
+  padding: 8px 14px; /* slightly smaller */
+  max-width: calc(var(--max-width) - 32px);
+  top: 12px; /* keep sticky offset reasonable */
+}
+
+.nav-menu { gap: 12px; }
+.nav-links { gap: 10px; flex-wrap: nowrap; }
+
+/* reduce anchor padding on desktop so more links fit */
+.nav-links a { padding: 6px 10px; border-radius: 8px; font-size: 0.95rem; }
+
+/* Mobile hamburger visibility + small tweaks */
+.mobile-menu-toggle {
+  display: none;
+}
+
+/* --- Mobile responsive rules --- */
+@media (max-width: 880px) {
+
+  /* show hamburger */
+  .mobile-menu-toggle { display: block; }
+
+  /* make nav-menu align to right */
+  .nav-menu { width: 100%; justify-content: flex-end; gap: 8px; }
+
+  /* hide inline links by default on mobile */
+  .nav-links { display: none; }
+
+  /* Mobile slide-down (matches JS .is-active state) */
+  .nav-menu.is-active .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    background: rgba(255,255,255,0.98);
+    border-radius: 12px;
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: calc(100% + 10px);
+    box-shadow: 0 10px 30px rgba(13,25,16,0.08);
+    z-index: 99;
+    transform-origin: top center;
+    animation: slideDown 220ms ease-out;
+  }
+
+  .nav-menu.is-active .nav-links a {
+    display: block;
+    width: 100%;
+    padding: 12px 10px;
+    border-radius: 8px;
+  }
+
+  /* reduced underline size for mobile */
+  .nav-links a::after { height: 2px; bottom: -6px; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px) scaleY(.98); }
+    to   { opacity: 1; transform: translateY(0) scaleY(1); }
+  }
+
+  /* ensure dropdown (role selection) is positioned nicely on mobile */
+  .role-dropdown .dropdown-menu {
+    right: 12px;
+    left: auto;
+    min-width: 160px;
+  }
+}
+
         /* ---------------------------
             HERO
         --------------------------- */
@@ -335,6 +436,73 @@
             display: flex;
             gap: 16px;
             flex-wrap: wrap
+        }
+
+        
+        /* HERO LAYOUT: desktop = two columns (text left, image right); mobile = stacked */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 36px;
+            padding: 40px 24px;
+            box-sizing: border-box;
+        }
+
+        /* left column (text + CTAs + stats) */
+        .hero-left {
+            flex: 1 1 55%;
+            min-width: 260px;
+        }
+
+        /* right column (image) */
+        .hero-right {
+            flex: 0 0 40%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* image sizing - responsive */
+        .hero-right img {
+            width: 100%;
+            max-width: 420px;
+            /* controls size on large screens */
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(10, 20, 10, 0.06);
+            object-fit: cover;
+        }
+
+        /* RESPONSIVE: stack vertically on small screens */
+        @media (max-width: 880px) {
+            .hero {
+                flex-direction: column;
+                text-align: left;
+                gap: 20px;
+            }
+
+            .hero-left {
+                width: 100%;
+            }
+
+            .hero-right {
+                width: 100%;
+                order: 2;
+                /* image below text */
+                margin-top: 6px;
+            }
+
+            .hero-right img {
+                max-width: 100%;
+                border-radius: 12px;
+            }
+        }
+
+        /* OPTIONAL: if you want image above text on very small screens, swap order */
+        @media (max-width: 520px) {
+            /* uncomment next line if you prefer image first on tiny screens */
+            /* .hero-right { order: -1; } */
         }
 
         .btn {
@@ -843,7 +1011,7 @@
             font-weight: 700;
         }
 
-        .product-image {
+        /* .product-image {
             width: 100%;
             height: 200px;
             background: linear-gradient(135deg, #f0fff0, #e8f5e9);
@@ -859,7 +1027,25 @@
             height: 80px;
             color: var(--earth-green);
             opacity: 0.3;
-        }
+        } */
+
+        .product-image {
+    width: 100%;
+    height: 160px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f4;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 
         /* Investor Dashboard Styles */
         .investor-dashboard {

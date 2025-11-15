@@ -2428,11 +2428,7 @@
 
         <section id="tasks" class="section-wrap" data-role="farmer" aria-labelledby="tasks-title">
 
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> da350bc7ddf162e38cd7171c867c75b9e4ceec6f
             <div class="section-title">
                 <h2 id="tasks-title" data-i18n="tasksTitle">AI-Driven Task Manager <i data-lucide="check-square"
                         style="color:var(--leaf);margin-top:4px"></i></h2>
@@ -2463,7 +2459,6 @@
             </div>
         </section>
         <!-- Log Action Modal (Required for the button to work) -->
-<<<<<<< HEAD
         <div id="logActionModal" class="modal-overlay" style="display:none;">
             <div class="modal">
                 <h3>Log New Action / Input</h3>
@@ -2492,36 +2487,6 @@
                 </form>
             </div>
         </div>
-=======
-            <div id="logActionModal" class="modal-overlay" style="display:none;">
-                <div class="modal">
-                    <h3>Log New Action / Input</h3>
-
-                    <form id="logActionForm">
-                        <label>Action Type</label>
-                        <select id="actionType">
-                            <option value="fertilizer">Fertilizer</option>
-                            <option value="irrigation">Irrigation</option>
-                            <option value="pesticide">Pesticide</option>
-                            <option value="harvest">Harvest</option>
-                            <option value="other">Other</option>
-                        </select>
-
-                        <label>Date</label>
-                        <input type="date" id="actionDate">
-
-                        <label>Field</label>
-                        <input type="text" id="actionField">
-
-                        <label>Details</label>
-                        <textarea id="actionDetails"></textarea>
-
-                        <button type="submit">Save</button>
-                        <button type="button" onclick="closeLogAction()">Cancel</button>
-                    </form>
-                </div>
-            </div>
->>>>>>> da350bc7ddf162e38cd7171c867c75b9e4ceec6f
 
 
         <hr class="section-divider">
@@ -5522,7 +5487,6 @@
                 const currentValue = Math.floor(easedProgress * (end - start) + start);
 
                 let formattedValue;
-<<<<<<< HEAD
 
                 // ⚡ SIMPLIFIED FORMATTING INSIDE LOOP TO AVOID CRASHES
                 if (targetElement.id === 'kpi-financial-value') {
@@ -5760,245 +5724,6 @@
 
         // If your dashboard hides/shows sections, call updateFpoChart() whenever new data available or when section becomes visible.
 
-=======
-
-                // ⚡ SIMPLIFIED FORMATTING INSIDE LOOP TO AVOID CRASHES
-                if (targetElement.id === 'kpi-financial-value') {
-                    formattedValue = `₹ ${(currentValue / 100000).toFixed(1)} Lakh`;
-                } else if (targetElement.id === 'kpi-impact-value') {
-                    formattedValue = `${currentValue.toLocaleString('en-IN')} Tonnes`;
-                } else {
-                    formattedValue = currentValue.toLocaleString('en-IN');
-                }
-
-                targetElement.textContent = formattedValue;
-
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    // ⚡ FINAL PRECISE FORMATTING
-                    if (targetElement.id === 'kpi-financial-value') {
-                        targetElement.textContent = `₹ ${(end / 100000).toFixed(2)} Lakh`;
-                    } else if (targetElement.id === 'kpi-impact-value') {
-                        targetElement.textContent = `${end.toLocaleString('en-IN')} Tonnes`;
-                    } else {
-                        targetElement.textContent = end.toLocaleString('en-IN');
-                    }
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        // --- KPI UPDATE FUNCTION (Period-Aware) ---
-        function updateInvestorKPIs() {
-            const timePeriodSelect = document.getElementById('chartPeriod');
-            if (!timePeriodSelect) return;
-
-            const selectedPeriod = timePeriodSelect.value;
-            const kpiData = DATA_BY_PERIOD[selectedPeriod].kpi; // ⚡ PULL DATA FROM NEW STRUCTURE
-
-            const financialEl = document.getElementById('kpi-financial').querySelector('.kpi-value');
-            const farmersEl = document.getElementById('kpi-farmers').querySelector('.kpi-value');
-            const impactEl = document.getElementById('kpi-impact').querySelector('.kpi-value');
-
-            // Set temporary IDs
-            financialEl.id = 'kpi-financial-value';
-            farmersEl.id = 'kpi-farmers-value';
-            impactEl.id = 'kpi-impact-value';
-
-            const duration = 1500;
-
-            // Execute animations with new period data
-            animateCount(financialEl, 0, kpiData.totalRevenue, duration);
-            animateCount(farmersEl, 0, kpiData.totalFarmers, duration);
-            animateCount(impactEl, 0, kpiData.co2Sequestered, duration);
-        }
-
-        // --- FINAL EVENT LISTENERS (CLEANED UP) ---
-
-        // 1. Dropdown listeners: These trigger an update instantly when changed
-        document.getElementById('data-series')?.addEventListener('change', renderInvestorGraph);
-        document.getElementById('graph-type-select')?.addEventListener('change', renderInvestorGraph);
-
-        // ⚡ FIX: This is the listener for your period dropdown (chartPeriod)
-        document.getElementById('chartPeriod')?.addEventListener('change', renderInvestorGraph);
-
-        // 2. ⚡ FIX: This ensures the "Generate Report" button explicitly triggers the render function
-        const btn = document.getElementById('generate-report-btn');
-        if (btn) {
-            btn.addEventListener('click', () => {
-                renderInvestorGraph();
-                updateInvestorKPIs();
-            });
-        }
-
-
-        // Fallback/Legacy button listener (optional, remove if you deleted the 'Analyze Data' button)
-        document.getElementById('generate-graph')?.addEventListener('click', renderInvestorGraph);
-
-
-        // 3. Initial load listener
-        window.addEventListener('load', () => {
-            // Calling renderInvestorGraph() on load will trigger the first data load and animation.
-            renderInvestorGraph();
-        });
-
-                  // ---- Sample / default data (you can replace with fetch from your API) ----
-  const defaultLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-  const defaultMembers = [120, 180, 260, 350, 420, 510, 600];
-  const defaultCredits = [20, 45, 70, 100, 160, 220, 300]; // in tonnes or credits
-
-  // ---- Create chart ----
-  const ctx = document.getElementById('fpoChart').getContext('2d');
-
-  // Keep global ref for updates
-  let fpoChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: defaultLabels,
-      datasets: [
-        {
-          label: 'Member Growth',
-          data: defaultMembers,
-          yAxisID: 'yMembers',
-          borderWidth: 3,
-          fill: true,
-          backgroundColor: (ctx) => {
-            // subtle gradient
-            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
-            g.addColorStop(0, 'rgba(10,125,62,0.15)');
-            g.addColorStop(1, 'rgba(10,125,62,0.02)');
-            return g;
-          },
-          borderColor: 'rgba(10,125,62,1)',
-          pointRadius: 3,
-          tension: 0.4,
-        },
-        {
-          label: 'Carbon Credits Generated',
-          data: defaultCredits,
-          yAxisID: 'yCredits',
-          borderWidth: 3,
-          borderDash: [6,4],
-          borderColor: 'rgba(6,86,132,1)',
-          pointRadius: 3,
-          fill: false,
-          tension: 0.4,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        title: {
-          display: false
-        },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          callbacks: {
-            // example format: show units for credits
-            label: function(context) {
-              const label = context.dataset.label || '';
-              const value = context.parsed.y;
-              if (context.dataset.yAxisID === 'yCredits') {
-                return label + ': ' + value + ' tCO₂eq'; // change unit as needed
-              }
-              return label + ': ' + value;
-            }
-          }
-        },
-        legend: {
-          position: 'top',
-          labels: {boxWidth: 12, padding: 12}
-        }
-      },
-      interaction: {
-        mode: 'nearest',
-        axis: 'x',
-        intersect: false
-      },
-      scales: {
-        x: {
-          grid: {display:false},
-          ticks: {maxRotation: 0, autoSkip: true}
-        },
-        yMembers: {
-          type: 'linear',
-          position: 'left',
-          beginAtZero: true,
-          title: {display:true, text:'Members'},
-          grid: {color: 'rgba(0,0,0,0.04)'}
-        },
-        yCredits: {
-          type: 'linear',
-          position: 'right',
-          beginAtZero: true,
-          title: {display:true, text:'Carbon Credits (tCO₂eq)'},
-          grid: {drawOnChartArea: false}
-        }
-      }
-    }
-  });
-
-  // ---- Helper: update chart with new data object ----
-  // expected format:
-  // { labels: [...], members: [...], credits: [...], totals: { memberCount: 1247, verifiedCredits: 3120, revenue: '₹2.4L' } }
-  function updateFpoChart(data = {}) {
-    // defensive: fall back to defaults
-    const labels = Array.isArray(data.labels) ? data.labels : defaultLabels;
-    const members = Array.isArray(data.members) ? data.members : defaultMembers;
-    const credits = Array.isArray(data.credits) ? data.credits : defaultCredits;
-
-    fpoChart.data.labels = labels;
-    fpoChart.data.datasets[0].data = members;
-    fpoChart.data.datasets[1].data = credits;
-    fpoChart.update();
-
-    // optional: update stat cards if totals provided
-    if (data.totals) {
-      if (data.totals.memberCount != null) {
-        const el = document.getElementById('fpo-member-count');
-        if (el) el.textContent = data.totals.memberCount.toLocaleString();
-      }
-      // add other stat updates similarly (verified credits, revenue, etc.)
-      if (data.totals.verifiedCredits != null) {
-        const el = document.querySelector('.fpo-stat-card .fpo-stat-value'); // adjust selector to proper stat card
-        // better: add ids to each stat card to update specifically — e.g. id="verified-credits"
-      }
-    }
-  }
-
-  // ---- Example: fetch live data from your backend and push to chart ----
-  // Replace '/api/fpo-metrics' with your real endpoint.
-  async function loadFpoData() {
-    try {
-      const res = await fetch('/api/fpo-metrics'); // expected to return JSON in the shape used above
-      if (!res.ok) throw new Error('Network error');
-      const json = await res.json();
-
-      // Example transform if your backend has a different shape:
-      // const payload = {
-      //   labels: json.months,
-      //   members: json.member_growth,
-      //   credits: json.carbon_credits,
-      //   totals: json.totals
-      // };
-      // For now assume the API returns the same format:
-      updateFpoChart(json);
-    } catch (err) {
-      console.warn('Could not load FPO data, using defaults:', err);
-      // still keep defaults loaded
-    }
-  }
-
-  // call on load (you can also call conditionally when section becomes visible)
-  loadFpoData();
-
-  // If your dashboard hides/shows sections, call updateFpoChart() whenever new data available or when section becomes visible.
-
->>>>>>> da350bc7ddf162e38cd7171c867c75b9e4ceec6f
     </script>
 </body>
 
