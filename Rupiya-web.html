@@ -2321,7 +2321,7 @@
 
         <section id="tasks" class="section-wrap" data-role="farmer" aria-labelledby="tasks-title">
 
-            
+
             <div class="section-title">
                 <h2 id="tasks-title" data-i18n="tasksTitle">AI-Driven Task Manager <i data-lucide="check-square"
                         style="color:var(--leaf);margin-top:4px"></i></h2>
@@ -2352,34 +2352,34 @@
             </div>
         </section>
         <!-- Log Action Modal (Required for the button to work) -->
-            <div id="logActionModal" class="modal-overlay" style="display:none;">
-                <div class="modal">
-                    <h3>Log New Action / Input</h3>
+        <div id="logActionModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h3>Log New Action / Input</h3>
 
-                    <form id="logActionForm">
-                        <label>Action Type</label>
-                        <select id="actionType">
-                            <option value="fertilizer">Fertilizer</option>
-                            <option value="irrigation">Irrigation</option>
-                            <option value="pesticide">Pesticide</option>
-                            <option value="harvest">Harvest</option>
-                            <option value="other">Other</option>
-                        </select>
+                <form id="logActionForm">
+                    <label>Action Type</label>
+                    <select id="actionType">
+                        <option value="fertilizer">Fertilizer</option>
+                        <option value="irrigation">Irrigation</option>
+                        <option value="pesticide">Pesticide</option>
+                        <option value="harvest">Harvest</option>
+                        <option value="other">Other</option>
+                    </select>
 
-                        <label>Date</label>
-                        <input type="date" id="actionDate">
+                    <label>Date</label>
+                    <input type="date" id="actionDate">
 
-                        <label>Field</label>
-                        <input type="text" id="actionField">
+                    <label>Field</label>
+                    <input type="text" id="actionField">
 
-                        <label>Details</label>
-                        <textarea id="actionDetails"></textarea>
+                    <label>Details</label>
+                    <textarea id="actionDetails"></textarea>
 
-                        <button type="submit">Save</button>
-                        <button type="button" onclick="closeLogAction()">Cancel</button>
-                    </form>
-                </div>
+                    <button type="submit">Save</button>
+                    <button type="button" onclick="closeLogAction()">Cancel</button>
+                </form>
             </div>
+        </div>
 
 
         <hr class="section-divider">
@@ -5087,7 +5087,7 @@
 
         let investorChart = null; // Global variable to hold the Chart.js instance
         // --- ENHANCED COLOR DEFINITIONS (Using your CSS variables) ---
-        const COLOR_LEAF = '#4CAF50';
+        const COLOR_LEAF = '#6ECB63';
         const COLOR_NAVY = '#1f2937';
         const COLOR_ACCENT = '#ffc107';
         const COLOR_WATER = 'rgba(0, 123, 255, 0.8)';
@@ -5464,6 +5464,65 @@
             // Calling renderInvestorGraph() on load will trigger the first data load and animation.
             renderInvestorGraph();
         });
+        // --- APPLY COLORS TO PERIOD DATA (Auto-enhancement for all charts) ---
+function applyChartColors() {
+
+    const applyEnvImpactColors = (env) => {
+        if (!env || !env.datasets) return;
+
+        // CO2 Bar
+        env.datasets[0].backgroundColor = COLOR_LEAF;
+        env.datasets[0].borderColor = COLOR_LEAF;
+        env.datasets[0].borderWidth = 1.5;
+        env.datasets[0].yAxisID = 'y';
+
+        // Water Bar
+        env.datasets[1].backgroundColor = COLOR_WATER;
+        env.datasets[1].borderColor = COLOR_WATER;
+        env.datasets[1].borderWidth = 1.5;
+        env.datasets[1].yAxisID = 'y1';
+    };
+
+    const applyFinancialColors = (fin) => {
+        if (!fin || !fin.datasets) return;
+
+        // Revenue Line
+        fin.datasets[0].borderColor = COLOR_LEAF;
+        fin.datasets[0].backgroundColor = 'rgba(76,175,80,0.15)';
+        fin.datasets[0].pointBackgroundColor = COLOR_LEAF;
+
+        // Investment Line
+        fin.datasets[1].borderColor = COLOR_NAVY;
+        fin.datasets[1].borderDash = [5, 5];
+        fin.datasets[1].backgroundColor = '#1A3C57';
+        fin.datasets[1].pointBackgroundColor = COLOR_NAVY;
+    };
+
+    const applyFarmerPieColors = (pie) => {
+        if (!pie || !pie.datasets) return;
+
+        pie.datasets[0].backgroundColor = [
+           ' #6ECB63',
+            '#F4D35E',
+            '#4DB6E2'
+        ];
+        pie.datasets[0].borderColor = "#ffffff";
+        pie.datasets[0].borderWidth = 2;
+    };
+
+    // Apply to every period
+    for (const periodKey in DATA_BY_PERIOD) {
+        const period = DATA_BY_PERIOD[periodKey];
+
+        applyEnvImpactColors(period.environmental_impact);
+        applyFinancialColors(period.financial_growth);
+        applyFarmerPieColors(period.farmer_onboarding);
+    }
+}
+
+// 🚀 Run this before first chart render
+applyChartColors();
+
     </script>
 </body>
 
