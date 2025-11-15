@@ -1,5 +1,3 @@
-
-
         // lucide icons initialization
         lucide.createIcons();
 
@@ -2214,4 +2212,280 @@ applyChartColors();
 
 
 
-  
+  // Back to Top - neon + bounce
+(function () {
+  const btn = document.getElementById('backToTop') || document.getElementById('backToTop') /* fallback id */;
+  if (!btn) return;
+
+  // render lucide icon (in case loaded earlier)
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+    lucide.createIcons();
+  }
+
+  let shownOnce = false;
+  const SHOW_SCROLL_Y = 350; // px when button appears
+  const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function onScroll() {
+    if (window.scrollY > SHOW_SCROLL_Y) {
+      if (!btn.classList.contains('show')) {
+        btn.classList.add('show');
+        // add bounce if reduced-motion not requested
+        if (!REDUCE_MOTION) {
+          // small delay so show transition completes
+          setTimeout(() => btn.classList.add('bounce'), 260);
+        }
+      }
+      shownOnce = true;
+    } else {
+      btn.classList.remove('bounce');
+      btn.classList.remove('show');
+    }
+  }
+
+  // initial check
+  onScroll();
+
+  // throttle scroll handler lightly
+  let scrollTimer = null;
+  window.addEventListener('scroll', () => {
+    if (scrollTimer !== null) {
+      clearTimeout(scrollTimer);
+    }
+    scrollTimer = setTimeout(() => {
+      onScroll();
+      scrollTimer = null;
+    }, 60);
+  }, { passive: true });
+
+  // click to top (smooth)
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    // temporarily remove bounce while scrolling (prevents jump)
+    if (!REDUCE_MOTION) btn.classList.remove('bounce');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // re-add bounce after scroll ends (approx)
+    if (!REDUCE_MOTION) {
+      setTimeout(() => {
+        if (btn.classList.contains('show')) btn.classList.add('bounce');
+      }, 800);
+    }
+  });
+
+  // keyboard: Enter/Space triggers click (button native does this but keep defensive)
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') btn.click();
+  });
+
+  // ensure icon re-renders after potential DOM changes
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+    lucide.createIcons();
+  }
+})();
+
+
+
+
+/* ===== Defensive modal patch — hide stray .modal and create isolated product modal =====
+   Paste this at the end of script.js, after other helpers. 
+   This will:
+   - hide any old .modal/.modal-backdrop/.modal-card elements (unless they have data-keep="true")
+   - create an isolated product modal with unique classnames (pmodal-*)
+   - attach robust open/close behaviors (backdrop, close btn, Escape)
+*/
+(function () {
+  // 0) Defensive: hide stray global modal elements that may be auto-opened
+  try {
+    // find elements that commonly cause auto-open issues
+    const suspects = document.querySelectorAll('.modal, .modal-card, .modal-backdrop, .modal-close');
+    suspects.forEach(el => {
+      // if developer intentionally wants a different modal, they can add data-keep="true" attribute
+      if (el.dataset && el.dataset.keep === "true") return;
+      // hide and disable pointer events to prevent accidental open/display
+      el.style.display = 'none';
+      el.style.visibility = 'hidden';
+      el.style.pointerEvents = 'none';
+      // remove attribute that can cause CSS to show it
+      el.removeAttribute('open');
+      el.removeAttribute('data-open');
+      // remove 'modal' class only if it's not intended to be kept
+      if (!el.dataset.keep) {
+        el.classList.add('hidden-by-script'); // mark it so we know we hid it
+      }
+    });
+  } catch (err) {
+    // non-fatal
+    console.warn('Defensive modal cleanup failed:', err);
+  }
+
+  // 1) Build isolated product modal (pmodal- prefixes) — single instance
+  const catalog = document.querySelector('.buyer-catalog');
+  if (!catalog) return; // nothing to do if no catalog
+
+  // remove previous injected product-modal if exists (avoid duplicates when reloading patch)
+  const existing = document.getElementById('product-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'product-modal';
+  modal.className = 'product-modal';
+  modal.setAttribute('aria-hidden', 'true');
+  modal.innerHTML = `
+    <div class="pmodal-backdrop" id="product-modal-backdrop" aria-hidden="true"></div>
+    <div class="pmodal-card" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="pmodal-title" tabindex="-1">
+      <button class="pmodal-close" aria-label="Close product details">&times;</button>
+      <div class="pmodal-body">
+        <div class="pmodal-image"><img src="" alt="" /></div>
+        <div class="pmodal-info">
+          <h3 id="pmodal-title"></h3>
+          <p class="pmodal-cert"></p>
+          <p class="pmodal-desc"></p>
+          <div class="pmodal-meta">
+            <strong class="pmodal-price"></strong>
+            <span class="pmodal-origin muted"></span>
+          </div>
+          <div style="margin-top:12px">
+            <button class="btn pmodal-buy">Request Quote</button>
+            <button class="btn ghost pmodal-contact">Contact Seller</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const backdrop = modal.querySelector('.pmodal-backdrop');
+  const card = modal.querySelector('.pmodal-card');
+  const closeBtn = modal.querySelector('.pmodal-close');
+
+  // small helper to keep focus inside modal (basic focus trap)
+  function trapFocus(container) {
+    const focusable = container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    function keyHandler(e) {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    container._focusHandler = keyHandler;
+    container.addEventListener('keydown', keyHandler);
+  }
+  function releaseFocus(container) {
+    if (container._focusHandler) container.removeEventListener('keydown', container._focusHandler);
+    container._focusHandler = null;
+  }
+
+  // open modal and populate
+  function openModal(data) {
+    modal.setAttribute('data-open', 'true');
+    modal.setAttribute('aria-hidden', 'false');
+    card.setAttribute('aria-hidden', 'false');
+
+    // fill fields
+    const imgEl = modal.querySelector('.pmodal-image img');
+    imgEl.src = data.img || '';
+    imgEl.alt = data.name || '';
+    modal.querySelector('#pmodal-title').textContent = data.name || '';
+    modal.querySelector('.pmodal-cert').textContent = data.cert || '';
+    modal.querySelector('.pmodal-desc').textContent = data.desc || '';
+    modal.querySelector('.pmodal-price').textContent = data.price || '';
+    modal.querySelector('.pmodal-origin').textContent = data.origin ? ' • ' + data.origin : '';
+
+    // show visually
+    document.body.style.overflow = 'hidden';
+    // small visible styles - ensure pointer events enabled
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    // focus trap
+    card.focus();
+    trapFocus(card);
+  }
+
+  // close modal
+  function closeModal() {
+    modal.removeAttribute('data-open');
+    modal.setAttribute('aria-hidden', 'true');
+    card.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // hide
+    modal.style.display = 'none';
+    // clear image (free memory)
+    const imgEl = modal.querySelector('.pmodal-image img');
+    if (imgEl) imgEl.src = '';
+    releaseFocus(card);
+  }
+
+  // delegated open click handler
+  catalog.addEventListener('click', (e) => {
+    const btn = e.target.closest('.view-details');
+    if (!btn) return;
+    const cardEl = btn.closest('.product-card');
+    if (!cardEl) return;
+    const data = {
+      id: cardEl.dataset.id || '',
+      name: cardEl.dataset.name || cardEl.querySelector('.product-title')?.textContent || '',
+      price: cardEl.dataset.price || cardEl.querySelector('.product-price')?.textContent || '',
+      origin: cardEl.dataset.origin || '',
+      cert: cardEl.dataset.cert || '',
+      desc: cardEl.dataset.desc || cardEl.querySelector('.product-short')?.textContent || '',
+      img: cardEl.querySelector('.product-image img')?.src || ''
+    };
+    openModal(data);
+  });
+
+  // robust closing - single delegated listener on modal root
+  modal.addEventListener('click', (e) => {
+    // clicked backdrop area? (use class check)
+    if (e.target.classList && e.target.classList.contains('pmodal-backdrop')) {
+      closeModal();
+      return;
+    }
+    // clicked close button (or its child)
+    if (e.target.closest && e.target.closest('.pmodal-close')) {
+      closeModal();
+      return;
+    }
+  });
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.getAttribute('data-open')) closeModal();
+  });
+
+  // Ensure modal hidden initially (in case previous CSS forced show)
+  modal.style.display = 'none';
+
+  // 2) Inject isolated CSS (safe names) if not already present
+  if (!document.getElementById('pmodal-styles')) {
+    const s = document.createElement('style');
+    s.id = 'pmodal-styles';
+    s.textContent = `
+      .product-modal { position:fixed; inset:0; z-index:1400; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+      .product-modal[data-open] { pointer-events:auto; }
+      .product-modal .pmodal-backdrop { position:absolute; inset:0; background:rgba(4,10,6,0.6); }
+      .product-modal .pmodal-card { position:relative; width:min(980px,96%); background:white; border-radius:12px; padding:18px; z-index:2; box-shadow:0 20px 50px rgba(0,0,0,0.3); outline:none; }
+      .product-modal .pmodal-close { position:absolute; top:12px; right:12px; border:none; background:transparent; font-size:22px; cursor:pointer; }
+      .product-modal .pmodal-body { display:flex; gap:16px; align-items:flex-start; }
+      .product-modal .pmodal-image { width:44%; max-width:420px; border-radius:8px; overflow:hidden; }
+      .product-modal .pmodal-image img { width:100%; height:100%; object-fit:cover; display:block; }
+      .product-modal .pmodal-info { width:56%; }
+      .product-modal .pmodal-info h3 { margin-top:0; color:var(--earth-green); }
+      .product-modal .pmodal-cert { font-weight:700; color:#2b6b44; margin:6px 0; }
+      .product-modal .pmodal-desc { color:#334; }
+      .product-modal .pmodal-meta { margin-top:10px; display:flex; gap:12px; align-items:center; }
+      .product-modal .muted { color:#6b766f; font-size:0.95rem; }
+      @media (max-width:880px) { .product-modal .pmodal-body { flex-direction:column; } .product-modal .pmodal-image, .product-modal .pmodal-info { width:100%; } }
+    `;
+    document.head.appendChild(s);
+  }
+
+  // Safety: if any other code tries to open an element with id 'product-modal' set to display:block,
+  // our defensive approach keeps this instance managed by our JS.
+})();

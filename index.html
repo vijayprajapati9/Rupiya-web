@@ -20,7 +20,7 @@
         <div class="logo">Rupiya<span style="color:var(--leaf)">.app</span></div>
 
         <!-- Replace your existing icon element with this (or edit attributes) -->
-        <i data-lucide="menu" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-controls="nav-menu"
+        <i data-lucide="menu" class="mobiltogglee-menu-" id="mobile-menu-toggle" aria-controls="nav-menu"
             aria-expanded="false" role="button" aria-label="Toggle menu"></i>
 
         <div class="nav-menu" id="nav-menu">
@@ -168,7 +168,7 @@
                         <text x="60" y="50" fill="#06345a" font-weight="700" data-i18n="resLayer3">Satellite Imagery &
                             AI Analytics (Verification)</text>
                     </svg>
-                    <div id="res-tooltip" class="tooltip" style="display:none;margin-top:12px"></div>
+                    <div id="res-tooltip" clas-s="tooltip" style="display:none;margin-top:12px"></div>
                 </div>
 
                 <div style="flex:0 0 360px">
@@ -633,58 +633,180 @@
                 complete traceability</p>
 
             <div class="buyer-catalog">
-                <div class="product-card">
-                    <div class="product-badge" data-i18n="productBadgeCertified">Certified</div>
-                    <div class="product-image">
-                        <img src="images/wheat.jpg" alt="Organic Wheat">
-                    </div>
 
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="product1Name">Organic Wheat</h3>
-                    <p style="margin:0 0 12px;color:#666;font-size:0.9rem" data-i18n="product1Desc">Premium quality,
-                        residue-free wheat from verified farms</p>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
-                        <span style="font-weight:700;color:var(--earth-green);font-size:1.2rem"
-                            data-i18n="product1Price">₹2,800/quintal</span>
-                        <button class="btn" style="padding:8px 16px;font-size:0.85rem"
-                            data-i18n="productViewDetails">View Details</button>
-                    </div>
-                </div>
+  <!-- PRODUCT 1 -->
+  <div class="product-card" data-id="p-wheat"
+       data-name="Organic Wheat"
+       data-price="₹2,800/quintal"
+       data-origin="Verified farms - Haryana"
+       data-cert="Certified (Residue-Free)"
+       data-desc="Premium quality, residue-free wheat from verified farms. Delivered as bulk lots with QR traceability.">
+    <div class="product-badge">Certified</div>
+    <div class="product-image">
+      <img src="images/wheat.jpg" alt="Organic Wheat" loading="lazy">
+    </div>
+    <h3 class="product-title">Organic Wheat</h3>
+    <p class="product-short">Premium quality, residue-free wheat from verified farms</p>
+    <div class="product-meta">
+      <span class="product-price">₹2,800/quintal</span>
+      <button class="btn view-details" data-product="p-wheat">View Details</button>
+    </div>
+  </div>
 
-                <div class="product-card">
-                    <div class="product-badge" data-i18n="productBadgeCertified">Certified</div>
-                    <div class="product-image">
-                        <img src="images/cotton.jpg" alt="Organic Cotton">
-                    </div>
+  <!-- PRODUCT 2 -->
+  <div class="product-card" data-id="p-cotton"
+       data-name="Organic Cotton"
+       data-price="₹6,500/quintal"
+       data-origin="Gujarat & Maharashtra"
+       data-cert="Traceable Carbon-Certified"
+       data-desc="Traceable organic cotton produced under residue-free protocols and eligible for carbon credits.">
+    <div class="product-badge">Certified</div>
+    <div class="product-image">
+      <img src="images/cotton.jpg" alt="Organic Cotton" loading="lazy">
+    </div>
+    <h3 class="product-title">Organic Cotton</h3>
+    <p class="product-short">Traceable organic cotton with carbon credit certification</p>
+    <div class="product-meta">
+      <span class="product-price">₹6,500/quintal</span>
+      <button class="btn view-details" data-product="p-cotton">View Details</button>
+    </div>
+  </div>
 
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="product2Name">Organic Cotton</h3>
-                    <p style="margin:0 0 12px;color:#666;font-size:0.9rem" data-i18n="product2Desc">Traceable organic
-                        cotton with carbon credit certification</p>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
-                        <span style="font-weight:700;color:var(--earth-green);font-size:1.2rem"
-                            data-i18n="product2Price">₹6,500/quintal</span>
-                        <button class="btn" style="padding:8px 16px;font-size:0.85rem"
-                            data-i18n="productViewDetails">View Details</button>
-                    </div>
-                </div>
+  <!-- PRODUCT 3 -->
+  <div class="product-card" data-id="p-vegs"
+       data-name="Organic Vegetables"
+       data-price="₹45/kg"
+       data-origin="Local FPOs"
+       data-cert="Residue-Free Verified"
+       data-desc="Fresh seasonal vegetables grown under residue-free practice with farm-level traceability.">
+    <div class="product-badge">Certified</div>
+    <div class="product-image">
+      <img src="images/vegetables.jpg" alt="Organic Vegetables" loading="lazy">
+    </div>
+    <h3 class="product-title">Organic Vegetables</h3>
+    <p class="product-short">Fresh, residue-free vegetables from verified farms</p>
+    <div class="product-meta">
+      <span class="product-price">₹45/kg</span>
+      <button class="btn view-details" data-product="p-vegs">View Details</button>
+    </div>
+  </div>
 
-                <div class="product-card">
-                    <div class="product-badge" data-i18n="productBadgeCertified">Certified</div>
-                    <div class="product-image">
-                        <img src="images/vegetables.jpg" alt="Organic Vegetables">
-                    </div>
+  <!-- PRODUCT 4 -->
+  <div class="product-card" data-id="p-rice"
+       data-name="Sustainable Rice"
+       data-price="₹3,200/quintal"
+       data-origin="Punjab"
+       data-cert="Residue-Free / Traceable"
+       data-desc="High-grade paddy cultivated with residue-free fertilisers; batch-level lab-tested.">
+    <div class="product-badge">Verified</div>
+    <div class="product-image">
+      <img src="images/rice.jpeg" alt="Sustainable Rice" loading="lazy">
+    </div>
+    <h3 class="product-title">Sustainable Rice</h3>
+    <p class="product-short">Paddy from residue-minimised practices and lab-tested lots</p>
+    <div class="product-meta">
+      <span class="product-price">₹3,200/quintal</span>
+      <button class="btn view-details" data-product="p-rice">View Details</button>
+    </div>
+  </div>
 
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="product3Name">Organic Vegetables
-                    </h3>
-                    <p style="margin:0 0 12px;color:#666;font-size:0.9rem" data-i18n="product3Desc">Fresh, residue-free
-                        vegetables from verified farms</p>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
-                        <span style="font-weight:700;color:var(--earth-green);font-size:1.2rem"
-                            data-i18n="product3Price">₹45/kg</span>
-                        <button class="btn" style="padding:8px 16px;font-size:0.85rem"
-                            data-i18n="productViewDetails">View Details</button>
-                    </div>
-                </div>
-            </div>
+  <!-- PRODUCT 5 -->
+  <div class="product-card" data-id="p-pulses"
+       data-name="Organic Pulses"
+       data-price="₹6,000/quintal"
+       data-origin="Madhya Pradesh"
+       data-cert="Residue-Free"
+       data-desc="Chana and tur sourced from verified farms practicing residue-free pest control.">
+    <div class="product-badge">Verified</div>
+    <div class="product-image">
+      <img src="images/pulses.jpg" alt="Organic Pulses" loading="lazy">
+    </div>
+    <h3 class="product-title">Organic Pulses</h3>
+    <p class="product-short">Chana & tur — traceable and residue-free</p>
+    <div class="product-meta">
+      <span class="product-price">₹6,000/quintal</span>
+      <button class="btn view-details" data-product="p-pulses">View Details</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT 6 -->
+  <div class="product-card" data-id="p-spices"
+       data-name="Aromatic Spices"
+       data-price="₹180/kg"
+       data-origin="Kerala"
+       data-cert="Residue-Free / Organic"
+       data-desc="Pepper, cardamom and turmeric produced under strict residue-free protocols.">
+    <div class="product-badge">Organic</div>
+    <div class="product-image">
+      <img src="images/spices.jpg" alt="Aromatic Spices" loading="lazy">
+    </div>
+    <h3 class="product-title">Aromatic Spices</h3>
+    <p class="product-short">Pepper, cardamom, turmeric — certified organic & residue-free</p>
+    <div class="product-meta">
+      <span class="product-price">₹180/kg</span>
+      <button class="btn view-details" data-product="p-spices">View Details</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT 7 -->
+  <div class="product-card" data-id="p-sugarcane"
+       data-name="Residue-Free Sugarcane"
+       data-price="₹2,200/quintal"
+       data-origin="UP"
+       data-cert="Verified"
+       data-desc="Mechanically-harvested cane from verified fields with no chemical residues on field.">
+    <div class="product-badge">Verified</div>
+    <div class="product-image">
+      <img src="images/sugarcane.jpg" alt="Residue-Free Sugarcane" loading="lazy">
+    </div>
+    <h3 class="product-title">Residue-Free Sugarcane</h3>
+    <p class="product-short">Cane supplied through FPO procurement channels</p>
+    <div class="product-meta">
+      <span class="product-price">₹2,200/quintal</span>
+      <button class="btn view-details" data-product="p-sugarcane">View Details</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT 8 -->
+  <div class="product-card" data-id="p-oilseeds"
+       data-name="Cold-Pressed Oilseeds"
+       data-price="₹5,500/quintal"
+       data-origin="Rajasthan"
+       data-cert="Residue-Free"
+       data-desc="Sunflower & sesame grown without chemical residue — suitable for cold-press oil production.">
+    <div class="product-badge">Certified</div>
+    <div class="product-image">
+      <img src="images/oilseeds.png" alt="Cold-Pressed Oilseeds" loading="lazy">
+    </div>
+    <h3 class="product-title">Cold-Pressed Oilseeds</h3>
+    <p class="product-short">Sunflower & sesame — residue-safe for premium oil extraction</p>
+    <div class="product-meta">
+      <span class="product-price">₹5,500/quintal</span>
+      <button class="btn view-details" data-product="p-oilseeds">View Details</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT 9 -->
+  <div class="product-card" data-id="p-fruits"
+       data-name="Orchard Fruits"
+       data-price="₹65/kg"
+       data-origin="Maharashtra"
+       data-cert="Residue-Free"
+       data-desc="Mangoes and citrus grown with integrated pest management and residue monitoring.">
+    <div class="product-badge">Certified</div>
+    <div class="product-image">
+      <img src="images/fruits.jpg" alt="Orchard Fruits" loading="lazy">
+    </div>
+    <h3 class="product-title">Orchard Fruits</h3>
+    <p class="product-short">Mangoes, oranges — traceable & residue-tested</p>
+    <div class="product-meta">
+      <span class="product-price">₹65/kg</span>
+      <button class="btn view-details" data-product="p-fruits">View Details</button>
+    </div>
+  </div>
+
+</div>
+
         </section>
 
         <hr class="section-divider">
@@ -1260,10 +1382,11 @@
             </div>
         </section>
 
-        <footer>
+        <!-- <footer>
             <i data-lucide="heart" style="width:16px;height:16px;color:#d32f2f"></i> Rupiya.app 2025 • Healthy soil —
             Higher income.
-        </footer>
+        </footer> -->
+        
     </main>
 
     <div class="modal-bg" id="traceModal" aria-hidden="true">
@@ -1346,6 +1469,58 @@
             </div>
         </div>
     </div>
+
+    <footer class="site-footer extended-footer" role="contentinfo" aria-label="Footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Rupiya<span style="color:var(--leaf)">.app</span></div>
+      <p class="muted">Helping farmers adopt residue-free practices, generate carbon credits and connect to buyers.</p>
+      <div class="socials" aria-label="Social links">
+        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+        <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+        <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#buyer-catalog">Product Catalog</a></li>
+        <li><a href="#traceability">Traceability</a></li>
+        <li><a href="#carbon">Carbon Credits</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#careers">Careers</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-newsletter">
+      <h4>Get updates</h4>
+      <p class="muted">Join our newsletter for farmer stories & market updates.</p>
+      <form id="newsletter-form" class="newsletter-form" action="#" method="post" onsubmit="event.preventDefault(); alert('Subscribed (demo)');">
+        <input type="email" name="email" required placeholder="Your email" aria-label="Your email">
+        <button class="btn" type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="muted">© <span id="footer-year-2"></span> Rupiya.app — All rights reserved.</p>
+    <!-- <a href="#home" class="back-to-top" id="back-to-top" aria-label="Back to top">Back to top</a> -->
+  </div>
+</footer>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="back-to-top-btn" aria-label="Back to top" title="Back to top">
+  <i data-lucide="arrow-up"></i>
+</button>
+
     <script src="script.js"></script>
 </body>
 
