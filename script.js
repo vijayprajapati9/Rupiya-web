@@ -2286,47 +2286,19 @@ applyChartColors();
 
 
 
-/* ===== Defensive modal patch — hide stray .modal and create isolated product modal =====
-   Paste this at the end of script.js, after other helpers. 
-   This will:
-   - hide any old .modal/.modal-backdrop/.modal-card elements (unless they have data-keep="true")
-   - create an isolated product modal with unique classnames (pmodal-*)
-   - attach robust open/close behaviors (backdrop, close btn, Escape)
-*/
+
+
+/* ---------- Product catalog modal (single, isolated, robust) ---------- */
 (function () {
-  // 0) Defensive: hide stray global modal elements that may be auto-opened
-  try {
-    // find elements that commonly cause auto-open issues
-    const suspects = document.querySelectorAll('.modal, .modal-card, .modal-backdrop, .modal-close');
-    suspects.forEach(el => {
-      // if developer intentionally wants a different modal, they can add data-keep="true" attribute
-      if (el.dataset && el.dataset.keep === "true") return;
-      // hide and disable pointer events to prevent accidental open/display
-      el.style.display = 'none';
-      el.style.visibility = 'hidden';
-      el.style.pointerEvents = 'none';
-      // remove attribute that can cause CSS to show it
-      el.removeAttribute('open');
-      el.removeAttribute('data-open');
-      // remove 'modal' class only if it's not intended to be kept
-      if (!el.dataset.keep) {
-        el.classList.add('hidden-by-script'); // mark it so we know we hid it
-      }
-    });
-  } catch (err) {
-    // non-fatal
-    console.warn('Defensive modal cleanup failed:', err);
-  }
-
-  // 1) Build isolated product modal (pmodal- prefixes) — single instance
-  const catalog = document.querySelector('.buyer-catalog');
-  if (!catalog) return; // nothing to do if no catalog
-
-  // remove previous injected product-modal if exists (avoid duplicates when reloading patch)
-  const existing = document.getElementById('product-modal');
-  if (existing) existing.remove();
-
-  const modal = document.createElement('div');
+    const catalog = document.querySelector('.buyer-catalog');
+    if (!catalog) return;
+    
+    // remove any previous instance we created earlier
+    const prev = document.getElementById('product-modal');
+    if (prev) prev.remove();
+    
+    // build modal DOM (isolated class names)
+    const modal = document.createElement('div');
   modal.id = 'product-modal';
   modal.className = 'product-modal';
   modal.setAttribute('aria-hidden', 'true');
@@ -2335,135 +2307,118 @@ applyChartColors();
     <div class="pmodal-card" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="pmodal-title" tabindex="-1">
       <button class="pmodal-close" aria-label="Close product details">&times;</button>
       <div class="pmodal-body">
-        <div class="pmodal-image"><img src="" alt="" /></div>
-        <div class="pmodal-info">
-          <h3 id="pmodal-title"></h3>
-          <p class="pmodal-cert"></p>
-          <p class="pmodal-desc"></p>
-          <div class="pmodal-meta">
-            <strong class="pmodal-price"></strong>
-            <span class="pmodal-origin muted"></span>
-          </div>
-          <div style="margin-top:12px">
-            <button class="btn pmodal-buy">Request Quote</button>
-            <button class="btn ghost pmodal-contact">Contact Seller</button>
-          </div>
-        </div>
+      <div class="pmodal-image"><img src="" alt="" /></div>
+      <div class="pmodal-info">
+      <h3 id="pmodal-title"></h3>
+      <p class="pmodal-cert"></p>
+      <p class="pmodal-desc"></p>
+      <div class="pmodal-meta">
+      <strong class="pmodal-price"></strong>
+      <span class="pmodal-origin muted"></span>
       </div>
-    </div>
-  `;
+      <div style="margin-top:12px">
+      <button class="btn pmodal-buy">Request Quote</button>
+      <button class="btn ghost pmodal-contact">Contact Seller</button>
+      </div>
+      </div>
+      </div>
+      </div>
+      `;
   document.body.appendChild(modal);
-
+  
+  // references
   const backdrop = modal.querySelector('.pmodal-backdrop');
   const card = modal.querySelector('.pmodal-card');
-  const closeBtn = modal.querySelector('.pmodal-close');
-
-  // small helper to keep focus inside modal (basic focus trap)
+  
+  // ensure modal hidden initially
+  modal.style.display = 'none';
+  
+  // focus trap helpers
   function trapFocus(container) {
     const focusable = container.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
     if (!focusable.length) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    function keyHandler(e) {
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    function handler(e) {
       if (e.key !== 'Tab') return;
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
-    container._focusHandler = keyHandler;
-    container.addEventListener('keydown', keyHandler);
+    container._trap = handler;
+    container.addEventListener('keydown', handler);
+}
+function releaseFocus(container) {
+    if (container._trap) container.removeEventListener('keydown', container._trap);
+    container._trap = null;
   }
-  function releaseFocus(container) {
-    if (container._focusHandler) container.removeEventListener('keydown', container._focusHandler);
-    container._focusHandler = null;
-  }
-
-  // open modal and populate
+  
+  // open / close
   function openModal(data) {
     modal.setAttribute('data-open', 'true');
     modal.setAttribute('aria-hidden', 'false');
     card.setAttribute('aria-hidden', 'false');
-
-    // fill fields
-    const imgEl = modal.querySelector('.pmodal-image img');
-    imgEl.src = data.img || '';
-    imgEl.alt = data.name || '';
+    
+    // fill
+    const img = modal.querySelector('.pmodal-image img');
+    img.src = data.img || '';
+    img.alt = data.name || '';
     modal.querySelector('#pmodal-title').textContent = data.name || '';
     modal.querySelector('.pmodal-cert').textContent = data.cert || '';
     modal.querySelector('.pmodal-desc').textContent = data.desc || '';
     modal.querySelector('.pmodal-price').textContent = data.price || '';
     modal.querySelector('.pmodal-origin').textContent = data.origin ? ' • ' + data.origin : '';
-
-    // show visually
-    document.body.style.overflow = 'hidden';
-    // small visible styles - ensure pointer events enabled
+    
+    // show
     modal.style.display = 'flex';
     modal.style.alignItems = 'center';
-    // focus trap
+    document.body.style.overflow = 'hidden';
     card.focus();
     trapFocus(card);
-  }
+}
 
-  // close modal
-  function closeModal() {
+function closeModal() {
     modal.removeAttribute('data-open');
     modal.setAttribute('aria-hidden', 'true');
     card.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    // hide
     modal.style.display = 'none';
-    // clear image (free memory)
-    const imgEl = modal.querySelector('.pmodal-image img');
-    if (imgEl) imgEl.src = '';
+    document.body.style.overflow = '';
+    // clear image
+    const img = modal.querySelector('.pmodal-image img');
+    if (img) img.src = '';
     releaseFocus(card);
-  }
+}
 
-  // delegated open click handler
-  catalog.addEventListener('click', (e) => {
+// open handler (delegated)
+catalog.addEventListener('click', (e) => {
     const btn = e.target.closest('.view-details');
     if (!btn) return;
-    const cardEl = btn.closest('.product-card');
-    if (!cardEl) return;
+    const productCard = btn.closest('.product-card');
+    if (!productCard) return;
+    
     const data = {
-      id: cardEl.dataset.id || '',
-      name: cardEl.dataset.name || cardEl.querySelector('.product-title')?.textContent || '',
-      price: cardEl.dataset.price || cardEl.querySelector('.product-price')?.textContent || '',
-      origin: cardEl.dataset.origin || '',
-      cert: cardEl.dataset.cert || '',
-      desc: cardEl.dataset.desc || cardEl.querySelector('.product-short')?.textContent || '',
-      img: cardEl.querySelector('.product-image img')?.src || ''
+      id: productCard.dataset.id || '',
+      name: productCard.dataset.name || productCard.querySelector('.product-title')?.textContent || '',
+      price: productCard.dataset.price || productCard.querySelector('.product-price')?.textContent || '',
+      origin: productCard.dataset.origin || '',
+      cert: productCard.dataset.cert || '',
+      desc: productCard.dataset.desc || productCard.querySelector('.product-short')?.textContent || '',
+      img: productCard.querySelector('.product-image img')?.src || ''
     };
     openModal(data);
   });
-
-  // robust closing - single delegated listener on modal root
+  
+  // robust close (delegated on modal)
   modal.addEventListener('click', (e) => {
-    // clicked backdrop area? (use class check)
-    if (e.target.classList && e.target.classList.contains('pmodal-backdrop')) {
-      closeModal();
-      return;
-    }
-    // clicked close button (or its child)
-    if (e.target.closest && e.target.closest('.pmodal-close')) {
-      closeModal();
-      return;
-    }
+    if (e.target.classList && e.target.classList.contains('pmodal-backdrop')) { closeModal(); return; }
+    if (e.target.closest && e.target.closest('.pmodal-close')) { closeModal(); return; }
   });
-
-  // Escape key
+  
+  // Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.getAttribute('data-open')) closeModal();
-  });
+});
 
-  // Ensure modal hidden initially (in case previous CSS forced show)
-  modal.style.display = 'none';
-
-  // 2) Inject isolated CSS (safe names) if not already present
-  if (!document.getElementById('pmodal-styles')) {
+// isolated CSS injection so styles don't collide
+if (!document.getElementById('pmodal-styles')) {
     const s = document.createElement('style');
     s.id = 'pmodal-styles';
     s.textContent = `
@@ -2482,10 +2437,96 @@ applyChartColors();
       .product-modal .pmodal-meta { margin-top:10px; display:flex; gap:12px; align-items:center; }
       .product-modal .muted { color:#6b766f; font-size:0.95rem; }
       @media (max-width:880px) { .product-modal .pmodal-body { flex-direction:column; } .product-modal .pmodal-image, .product-modal .pmodal-info { width:100%; } }
-    `;
-    document.head.appendChild(s);
-  }
+      `;
+      document.head.appendChild(s);
+    }
+})();
 
-  // Safety: if any other code tries to open an element with id 'product-modal' set to display:block,
-  // our defensive approach keeps this instance managed by our JS.
+
+// TRACEABILITY GRID POPUP
+(function() {
+    const traceData = {
+        farm: {
+            title: "Farm Origin (Source Verification)",
+            desc: "Farmer identity, GPS location, soil health baseline and organic compliance checks.",
+            images: ["images/farm_soil.jpg","images/field_geotag.jpg","images/lab_report.jpg"],
+            timeline: [
+                "Farmer Registered — Verified KYC",
+                "Soil Sample Collected — SOC 1.9%",
+                "Field Geotagged — GPS Lock"
+            ]
+        },
+        harvest: {
+            title: "Harvest & Collection",
+            desc: "Crop harvested with timestamps, moisture reading, and grain quality visual verification.",
+            images: ["images/harvest_collection.jpg","images/moisture_check.jpg"],
+            timeline: [
+                "Harvest Started — 8:40 AM",
+                "Moisture Check — 12%",
+                "Collection Center Received — 4:30 PM"
+            ]
+        },
+        processing: {
+            title: "Processing",
+            desc: "Cleaning, grading, sorting and FSSAI-compliant processing with batch linking.",
+            images: ["images/processing_facility.jpg","images/lab_report.jpg"],
+            timeline: [
+                "Batch Assigned: RUP-2025-0012",
+                "Sorting & Cleaning Completed",
+                "Lab Report — Residue Free"
+            ]
+        },
+        transport: {
+            title: "Distribution (Logistics)",
+            desc: "Cold-chain / truck tracking, temperature logs, geo-fenced route compliance.",
+            images: ["images/truck_tracking.jpg","images/temperature_log.jpg"],
+            timeline: [
+                "Truck Dispatched — 6:00 AM",
+                "Live GPS: En-route",
+                "ETA to Buyer — 2:40 PM"
+            ]
+        },
+        delivery: {
+            title: "Delivery & Documentation",
+            desc: "Final handover with invoice, certification bundle, buyer confirmation.",
+            images: ["images/delivery_docs.jpg","images/lab_report.jpg"],
+            timeline: [
+                "Arrived at Buyer Gate",
+                "QC Check — Passed",
+                "Delivery Completed — Receipt Generated"
+            ]
+        }
+    };
+
+    const modal = document.getElementById("trace-modal");
+    const modalTitle = document.getElementById("tmodal-title");
+    const modalDesc = document.getElementById("tmodal-desc");
+    const evidence = document.querySelector(".tmodal-evidence");
+    const timeline = document.getElementById("tmodal-timeline");
+
+    document.querySelectorAll(".trace-card").forEach(card => {
+        card.addEventListener("click", () => {
+            const step = card.dataset.step;
+            const info = traceData[step];
+
+            modalTitle.textContent = info.title;
+            modalDesc.textContent = info.desc;
+
+            evidence.innerHTML = info.images
+                .map(img => `<img src="${img}" alt="Evidence">`)
+                .join("");
+
+            timeline.innerHTML = `<ul>` + info.timeline.map(t => `<li>✔ ${t}</li>`).join("") + `</ul>`;
+
+            modal.setAttribute("aria-hidden","false");
+        });
+    });
+
+    // Close modal
+    document.querySelector(".tmodal-close").addEventListener("click", () => {
+        modal.setAttribute("aria-hidden","true");
+    });
+    document.querySelector(".tmodal-backdrop").addEventListener("click", () => {
+        modal.setAttribute("aria-hidden","true");
+    });
 })();

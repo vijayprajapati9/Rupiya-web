@@ -807,69 +807,87 @@
 
 </div>
 
+
         </section>
 
         <hr class="section-divider">
 
-        <!-- Buyer Traceability Flow -->
-        <section id="buyer-traceability" class="section-wrap" data-role="buyer" style="display: none;"
-            aria-labelledby="buyer-traceability-title">
-            <div class="section-title">
-                <h2 id="buyer-traceability-title" class="accessible-heading" data-i18n="buyerTraceabilityTitle">Complete
-                    Traceability Flow <i data-lucide="route" style="color:var(--leaf);margin-top:4px"></i></h2>
+        <!-- Buyer Traceability Flow — Upgraded Grid + Modal -->
+<section id="buyer-traceability" class="section-wrap" data-role="buyer" style="display:none;"
+    aria-labelledby="buyer-traceability-title">
+
+    <div class="section-title">
+        <h2 id="buyer-traceability-title" class="accessible-heading">
+            Complete Traceability Flow
+            <i data-lucide="route" style="color:var(--leaf);margin-top:4px"></i>
+        </h2>
+    </div>
+
+    <p class="section-sub accessible-text">Track your produce from farm to facility with transparent verification</p>
+
+    <!-- GRID -->
+    <div class="trace-grid">
+
+        <!-- STEP 1 -->
+        <div class="trace-card" data-step="farm">
+            <div class="t-icon"><i data-lucide="tractor"></i></div>
+            <h3>Farm Origin</h3>
+            <p>Verified farm GPS, soil quality, farmer identity</p>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="trace-card" data-step="harvest">
+            <div class="t-icon"><i data-lucide="package"></i></div>
+            <h3>Harvest & Collection</h3>
+            <p>Timestamped harvest logs + moisture & grain checks</p>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="trace-card" data-step="processing">
+            <div class="t-icon"><i data-lucide="factory"></i></div>
+            <h3>Processing</h3>
+            <p>FSSAI-certified processing + contaminant checks</p>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="trace-card" data-step="transport">
+            <div class="t-icon"><i data-lucide="truck"></i></div>
+            <h3>Distribution</h3>
+            <p>Real-time vehicle tracking + temperature logs</p>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="trace-card" data-step="delivery">
+            <div class="t-icon"><i data-lucide="check-circle"></i></div>
+            <h3>Delivery</h3>
+            <p>Final handover with invoice + certification bundle</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- TRACEABILITY POPUP MODAL -->
+<div id="trace-modal" class="tmodal" aria-hidden="true">
+    <div class="tmodal-backdrop"></div>
+
+    <div class="tmodal-card">
+        <button class="tmodal-close">&times;</button>
+
+        <div class="tmodal-content">
+            <h2 id="tmodal-title"></h2>
+            <p id="tmodal-desc"></p>
+
+            <div class="tmodal-evidence">
+                <!-- images injected here -->
             </div>
-            <p class="section-sub accessible-text" data-i18n="buyerTraceabilitySub">Track your produce from farm to your
-                facility with complete transparency</p>
 
-            <div class="traceability-flow">
-
-                <div class="flow-step">
-                    <div class="flow-icon">
-                        <i data-lucide="tractor" style="width:40px;height:40px"></i>
-                    </div>
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="flowStep1Title">Farm Origin</h3>
-                    <p style="margin:0;color:#666;font-size:0.95rem" data-i18n="flowStep1Desc">Verified farm location,
-                        soil health, and farming practices</p>
-                </div>
-
-                <div class="flow-step">
-                    <div class="flow-icon">
-                        <i data-lucide="package" style="width:40px;height:40px"></i>
-                    </div>
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="flowStep2Title">Harvest &
-                        Collection</h3>
-                    <p style="margin:0;color:#666;font-size:0.95rem" data-i18n="flowStep2Desc">Timestamped harvest with
-                        GPS coordinates and quality checks</p>
-                </div>
-
-                <div class="flow-step">
-                    <div class="flow-icon">
-                        <i data-lucide="factory" style="width:40px;height:40px"></i>
-                    </div>
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="flowStep3Title">Processing</h3>
-                    <p style="margin:0;color:#666;font-size:0.95rem" data-i18n="flowStep3Desc">Certified processing
-                        facilities with quality control</p>
-                </div>
-
-                <div class="flow-step">
-                    <div class="flow-icon">
-                        <i data-lucide="truck" style="width:40px;height:40px"></i>
-                    </div>
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="flowStep4Title">Distribution</h3>
-                    <p style="margin:0;color:#666;font-size:0.95rem" data-i18n="flowStep4Desc">Real-time tracking during
-                        transportation to your facility</p>
-                </div>
-
-                <div class="flow-step">
-                    <div class="flow-icon">
-                        <i data-lucide="check-circle" style="width:40px;height:40px"></i>
-                    </div>
-                    <h3 style="margin:12px 0 8px;color:var(--cloud-navy)" data-i18n="flowStep5Title">Delivery</h3>
-                    <p style="margin:0;color:#666;font-size:0.95rem" data-i18n="flowStep5Desc">Final delivery with
-                        complete documentation and certificates</p>
-                </div>
+            <div class="tmodal-timeline" id="tmodal-timeline">
+                <!-- timeline injected -->
             </div>
-        </section>
+        </div>
+    </div>
+</div>
+
 
         <hr class="section-divider">
 
@@ -1381,11 +1399,6 @@
                 <button class="btn primary-cta" id="join2"></button>
             </div>
         </section>
-
-        <!-- <footer>
-            <i data-lucide="heart" style="width:16px;height:16px;color:#d32f2f"></i> Rupiya.app 2025 • Healthy soil —
-            Higher income.
-        </footer> -->
         
     </main>
 
@@ -1470,11 +1483,15 @@
         </div>
     </div>
 
-    <footer class="site-footer extended-footer" role="contentinfo" aria-label="Footer">
+   <footer class="site-footer extended-footer" role="contentinfo" aria-label="Footer">
   <div class="footer-grid">
+
+    <!-- BRAND -->
     <div class="footer-brand">
       <div class="logo">Rupiya<span style="color:var(--leaf)">.app</span></div>
-      <p class="muted">Helping farmers adopt residue-free practices, generate carbon credits and connect to buyers.</p>
+      <p class="muted">
+        Helping farmers adopt residue-free practices, generate carbon credits and connect to buyers.
+      </p>
       <div class="socials" aria-label="Social links">
         <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
         <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
@@ -1482,39 +1499,54 @@
       </div>
     </div>
 
+    <!-- PRODUCT LINKS -->
     <div class="footer-links">
       <h4>Product</h4>
       <ul>
         <li><a href="#buyer-catalog">Product Catalog</a></li>
-        <li><a href="#traceability">Traceability</a></li>
+        <li><a href="#buyer-traceability">Traceability</a></li>
         <li><a href="#carbon">Carbon Credits</a></li>
       </ul>
     </div>
 
+    <!-- COMPANY LINKS -->
     <div class="footer-links">
       <h4>Company</h4>
       <ul>
         <li><a href="#about">About Us</a></li>
         <li><a href="#careers">Careers</a></li>
-        <li><a href="#contact">Contact</a></li>
+
+        <!-- WORKING CONTACT LINK -->
+        <li>
+          <a href="mailto:support@rupiya.app">Email Us</a>
+        </li>
+        <li>
+          <a href="https://wa.me/91XXXXXXXXXX" target="_blank">WhatsApp</a>
+        </li>
+        <li>
+          <a href="tel:+91XXXXXXXXXX">Call Us</a>
+        </li>
       </ul>
     </div>
 
+    <!-- NEWSLETTER -->
     <div class="footer-newsletter">
       <h4>Get updates</h4>
       <p class="muted">Join our newsletter for farmer stories & market updates.</p>
-      <form id="newsletter-form" class="newsletter-form" action="#" method="post" onsubmit="event.preventDefault(); alert('Subscribed (demo)');">
+      <form id="newsletter-form" class="newsletter-form" action="#" method="post"
+        onsubmit="event.preventDefault(); alert('Subscribed (demo)');">
         <input type="email" name="email" required placeholder="Your email" aria-label="Your email">
         <button class="btn" type="submit">Subscribe</button>
       </form>
     </div>
+
   </div>
 
   <div class="footer-bottom">
     <p class="muted">© <span id="footer-year-2"></span> Rupiya.app — All rights reserved.</p>
-    <!-- <a href="#home" class="back-to-top" id="back-to-top" aria-label="Back to top">Back to top</a> -->
   </div>
 </footer>
+
 
 <!-- Back to Top Button -->
 <button id="backToTop" class="back-to-top-btn" aria-label="Back to top" title="Back to top">
