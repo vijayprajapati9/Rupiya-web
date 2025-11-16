@@ -2530,3 +2530,205 @@ if (!document.getElementById('pmodal-styles')) {
         modal.setAttribute("aria-hidden","true");
     });
 })();
+
+
+
+    // --- Utility Function (Retained) ---
+    function calculateAndShowResult(calcId, calculationFn) {
+        document.getElementById(calcId).onclick = () => {
+            const resultElement = document.getElementById(calcId.replace('-calc', '-result'));
+            const resultText = calculationFn();
+            
+            resultElement.textContent = resultText;
+            resultElement.style.display = 'block';
+            
+            // Re-trigger animation
+            resultElement.classList.remove('result-animate');
+            void resultElement.offsetWidth; 
+            resultElement.classList.add('result-animate');
+        };
+    }
+
+    // --- Tab and Card Toggle Logic (Retained) ---
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.role-section');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const role = tab.dataset.role;
+            tabs.forEach(t=> t.classList.remove('active'));
+            tab.classList.add('active');
+            sections.forEach(s => s.style.display = s.dataset.role === role ? 'grid' : 'none'); 
+
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('is-active');
+                const result = card.querySelector('[id$="-result"]');
+                if (result) result.style.display = 'none';
+            });
+        });
+    });
+
+    const clickableCards = document.querySelectorAll('.clickable-card');
+    clickableCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('input, select, button')) {
+                return; 
+            }
+            
+            const parentSection = this.closest('.role-section');
+            if (parentSection) {
+                 parentSection.querySelectorAll('.card.is-active').forEach(activeCard => {
+                    if (activeCard !== this) {
+                        activeCard.classList.remove('is-active');
+                        const result = activeCard.querySelector('[id$="-result"]');
+                        if (result) result.style.display = 'none';
+                    }
+                });
+            }
+
+            this.classList.toggle('is-active');
+
+            if (!this.classList.contains('is-active')) {
+                const result = this.querySelector('[id$="-result"]');
+                if (result) result.style.display = 'none';
+            }
+        });
+    });
+
+    // --- ALL CALCULATOR FUNCTIONS (Retained) ---
+
+    // Farmer Credit Calculator
+    calculateAndShowResult('farmer-credit-calc', () => {
+        const area = parseFloat(document.getElementById('farmer-credit-area').value) || 0;
+        const yieldPerAcre = parseFloat(document.getElementById('farmer-credit-yield').value) || 0;
+        const creditBase = (area * yieldPerAcre * 35000); 
+        const credit = (creditBase * 0.70).toFixed(0); 
+        return `💰 Max Credit Approved: **₹${parseInt(credit).toLocaleString('en-IN')}**. Annual Interest Rate (W.E.F.): 7.0%.`;
+    });
+
+    // Farmer Gold Simulator
+    calculateAndShowResult('farmer-gold-calc', () => {
+        const amt = parseFloat(document.getElementById('farmer-gold-amount').value) || 0;
+        const goldPrice = 6300; 
+        const goldGrams = (amt / goldPrice).toFixed(3);
+        return `💎 Transaction successful. Gold credited: **${goldGrams}g** (99.9% purity). Securely held in Rupiya Vault.`;
+    });
+
+    // Farmer Insurance Estimate
+    calculateAndShowResult('farmer-insurance-calc', () => {
+        const area = parseFloat(document.getElementById('farmer-insurance-area').value) || 0;
+        const premium = (area * 1950).toFixed(0); 
+        const coverage = (area * 30000);
+        return `🛡️ Annual Premium: **₹${parseInt(premium).toLocaleString('en-IN')}**. Guaranteed Coverage: ₹${coverage.toLocaleString('en-IN')}. Policy ID: AGRI-${Math.floor(Math.random() * 10000)}.`;
+    });
+
+    // Farmer Rupiya Pay Simulator
+    calculateAndShowResult('farmer-pay-calc', () => {
+        const type = document.getElementById('farmer-pay-type').value;
+        const amt = parseFloat(document.getElementById('farmer-pay-amount').value) || 0;
+        let transactionPartner = type.includes('seed') ? 'Agri-Dealer, Sikar' : 'Farm Labourer, Account *8012';
+        return `✅ Payment Complete. **₹${amt.toLocaleString('en-IN')}** paid instantly to ${transactionPartner}. UPI Reference: UTD${Math.floor(Math.random() * 900000 + 100000)}.`;
+    });
+
+    // Farmer Input Cost Tracker 
+    calculateAndShowResult('farmer-costs-calc', () => {
+        const area = parseFloat(document.getElementById('farmer-costs-area').value) || 0;
+        const cropIntensity = document.getElementById('farmer-costs-crop').value;
+        let costPerAcre = 0; let laborPct = 0; let seedPct = 0;
+        
+        if (cropIntensity === 'low') { costPerAcre = 8000; laborPct = 0.4; seedPct = 0.3; }
+        else if (cropIntensity === 'medium') { costPerAcre = 15000; laborPct = 0.5; seedPct = 0.25; }
+        else { costPerAcre = 25000; laborPct = 0.6; seedPct = 0.15; }
+
+        const totalCost = (area * costPerAcre).toFixed(0);
+        const laborCost = (totalCost * laborPct).toFixed(0);
+        const seedCost = (totalCost * seedPct).toFixed(0);
+
+        return `💵 Estimated Total Cost: **₹${parseInt(totalCost).toLocaleString('en-IN')}**. Major components: Labor (₹${parseInt(laborCost).toLocaleString('en-IN')}), Seeds/Inputs (₹${parseInt(seedCost).toLocaleString('en-IN')}).`;
+    });
+
+    // Farmer Price Volatility Alert 
+    calculateAndShowResult('farmer-volatility-calc', () => {
+        const commodity = document.getElementById('farmer-volatility-commodity').value;
+        const time = parseInt(document.getElementById('farmer-volatility-time').value) || 3;
+        
+        let avgPrice = 0; let volatilityFactor = 0;
+        if (commodity === 'wheat') { avgPrice = 2400; volatilityFactor = 0.08; } 
+        else if (commodity === 'cotton') { avgPrice = 7000; volatilityFactor = 0.15; } 
+        else { avgPrice = 2000; volatilityFactor = 0.10; }
+
+        const maxSwing = avgPrice * volatilityFactor * (time / 6); 
+        const minPrice = avgPrice - maxSwing;
+        const maxPrice = avgPrice + maxSwing;
+
+        return `⚠️ Projected Price Range (${commodity.toUpperCase()} / Quintal) in ${time} months: **₹${minPrice.toFixed(0)} - ₹${maxPrice.toFixed(0)}**. Market risk: ${Math.round(volatilityFactor * 100)}%.`;
+    });
+
+    // FPO Revenue Forecast 
+    calculateAndShowResult('fpo-revenue-calc', () => {
+        const members = parseInt(document.getElementById('fpo-members').value) || 0;
+        const yieldPerMember = parseFloat(document.getElementById('fpo-yield').value) || 0;
+        const totalYield = members * yieldPerMember;
+        const totalCarbonIncome = totalYield * 450; 
+        const totalSaleValue = totalYield * 35000; 
+        const totalRevenue = totalSaleValue + totalCarbonIncome;
+        return `📈 Total FPO Revenue Forecast: **₹${totalRevenue.toLocaleString('en-IN')}**. Total Volume: ${totalYield.toFixed(1)} tons.`;
+    });
+
+    // FPO Equipment Loan Calculator 
+    calculateAndShowResult('fpo-loan-calc', () => {
+        const principal = parseFloat(document.getElementById('fpo-loan-amount').value) || 0;
+        const years = parseInt(document.getElementById('fpo-loan-years').value) || 5;
+        const rate = 0.12; 
+        const n = years * 12; 
+        const r = rate / 12; 
+        
+        const emi = principal * r * Math.pow((1 + r), n) / (Math.pow((1 + r), n) - 1);
+        const totalPayment = emi * n;
+        const totalInterest = totalPayment - principal;
+
+        if (emi > 0) {
+            return `💸 Monthly EMI: **₹${emi.toFixed(0).toLocaleString('en-IN')}** for ${years} years. Total Interest: ₹${totalInterest.toFixed(0).toLocaleString('en-IN')}.`;
+        } else {
+            return `Error: Please enter a valid loan amount.`;
+        }
+    });
+    
+    // FPO Carbon Credit Earning Forecast 
+    calculateAndShowResult('fpo-carbon-calc', () => {
+        const acres = parseFloat(document.getElementById('fpo-carbon-acres').value) || 0;
+        const practice = document.getElementById('fpo-carbon-practice').value;
+        
+        let tonsPerAcre = (practice === 'zero') ? 1.5 : 1.0; 
+        const carbonPrice = 850; 
+        
+        const totalTons = acres * tonsPerAcre;
+        const projectedIncome = totalTons * carbonPrice;
+        const practiceName = practice === 'zero' ? 'Zero Tillage' : 'Cover Cropping';
+
+        return `🌱 Projected Carbon Income (1 Yr): **₹${projectedIncome.toLocaleString('en-IN')}**. Practice: ${practiceName}. Estimated reduction: ${totalTons.toFixed(0)} tonnes CO2e.`;
+    });
+
+    // Investor Impact & ROI Simulation 
+    calculateAndShowResult('investor-calc', () => {
+        const amt = parseFloat(document.getElementById('investor-amount').value) || 0;
+        const roi = (amt * 0.145).toFixed(0); 
+        const impact = (amt / 10000 * 65).toFixed(0); 
+        const region = document.getElementById('investor-region').value === 'north' ? 'Northern' : 'Southern';
+
+        return `🎯 Est. ROI (1 Yr, Gross): **14.5% (₹${parseInt(roi).toLocaleString('en-IN')})**. Impact covers ${region} region, offsetting ${impact} tonnes CO2.`;
+    });
+
+    // Investor ESG Impact Score 
+    calculateAndShowResult('investor-esg-calc', () => {
+        const sector = document.getElementById('investor-esg-sector').value;
+        const size = parseFloat(document.getElementById('investor-esg-size').value) || 5.0; 
+
+        let baseScore = 75; 
+        if (sector === 'water') { baseScore += 5; } else if (sector === 'soil') { baseScore += 3; } else { baseScore += 7; }
+        
+        const finalScore = Math.min(95, Math.max(60, baseScore + Math.floor(size / 5))).toFixed(0);
+        const focusText = sector === 'community' ? 'Social Impact (S)' : 'Environmental Focus (E)';
+        
+        return `🌟 ESG Impact Score: **${finalScore}/100**. Primary driver is high **${focusText}**. Report Link: RPY-ESG-${Math.floor(Math.random() * 1000)}.`;
+    });

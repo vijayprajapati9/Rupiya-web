@@ -2628,3 +2628,255 @@ nav {
 .tmodal-timeline li {
     margin: 4px 0;
 }
+ /* ----------------------------------- */
+    /* 1. PROFESSIONAL COLOR PALETTE & BASE (RETAINED) */
+    /* ----------------------------------- */
+    :root {
+        /* Professional Tones */
+        --primary-green: #00875A; /* Deep, Corporate Green */
+        --secondary-blue: #1C67B8; /* Modern Blue */
+        --warning-orange: #E68A00; /* Richer Orange */
+        --pay-green: #2ecc71; /* Success Green */
+        --sustainability-teal: #00A381; /* New feature color for ESG/Carbon */
+
+        /* Neutrals */
+        --neutral-dark: #1F2937; /* Dark Gray for Text */
+        --neutral-medium: #6B7280; /* Subtext */
+        --neutral-light: #F9FAFB; /* Light Background */
+        --border-color: #E5E7EB; /* Subtle Border */
+        
+        /* Shadows & Transitions */
+        --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        --active-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        --hover-transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+
+    /* Base Styling for the Section */
+    #finance {
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 60px 0;
+        background-color: var(--neutral-light);
+        color: var(--neutral-dark);
+    }
+    
+    /* Section Title */
+    .section-title {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .section-title h2 {
+        font-size: 38px;
+        font-weight: 800;
+        color: var(--neutral-dark);
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* NEW: Styling for the Main H2 Icon */
+    .section-title h2::before {
+        content: "\f533"; /* Fa-Sack-Dollar */
+        font-family: "Font Awesome 5 Free"; 
+        font-weight: 900;
+        font-size: 32px; 
+        margin-right: 15px;
+        color: var(--primary-green);
+        line-height: 1;
+    }
+
+    .section-title p {
+        color: var(--neutral-medium);
+        font-size: 18px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* TAB STYLING */
+    .role-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+    .tab-btn {
+        padding: 10px 24px !important;
+        border-radius: 50px !important; 
+        font-weight: 600;
+        border: none !important;
+        cursor: pointer;
+        transition: var(--hover-transition);
+        font-size: 15px;
+        outline: none;
+    }
+    .tab-btn.active {
+        background-color: var(--primary-green) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 15px rgba(0, 135, 90, 0.4);
+        transform: scale(1.03); 
+    }
+    .tab-btn:not(.active) {
+        background-color: #fff !important;
+        color: var(--neutral-medium) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    .tab-btn:hover:not(.active) {
+        background-color: var(--neutral-light) !important;
+        color: var(--primary-green) !important;
+        border-color: var(--primary-green) !important;
+    }
+
+    /* GRID LAYOUT & 3D CARDS */
+    .role-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        padding: 0 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .card {
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+        border: 1px solid var(--border-color);
+        transition: var(--hover-transition);
+        overflow: hidden;
+        perspective: 1000px;
+        background-color: #fff;
+    }
+    .clickable-card {
+        cursor: pointer;
+    }
+    
+    /* 3D Tilt Effect on Hover */
+    .clickable-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Card Header */
+    .card h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 0px;
+        display: flex;
+        align-items: center;
+        transition: color 0.3s ease;
+    }
+    /* Icon Styling (Font Awesome/Material Icons) */
+    .card h3::before {
+        content: attr(data-icon);
+        font-family: "Font Awesome 5 Free"; 
+        font-weight: 900;
+        font-size: 24px; 
+        margin-right: 12px;
+        line-height: 1;
+        opacity: 0.9;
+        color: inherit; 
+    }
+    
+    .card-summary {
+        font-size: 15px;
+        color: var(--neutral-medium);
+        margin-top: 6px;
+    }
+
+    /* Smooth Slide Animation */
+    .card-content {
+        max-height: 0;
+        opacity: 0;
+        transition: max-height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease;
+        padding-top: 0;
+        margin-top: 0;
+        overflow: hidden;
+    }
+    
+    .card.is-active .card-content {
+        max-height: 500px;
+        opacity: 1;
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .card.is-active {
+        box-shadow: var(--active-shadow);
+    }
+
+    /* Form and Result Styling */
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+    .form-item {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    input[type="number"], select {
+        padding: 10px 12px !important;
+        border-radius: 8px !important;
+        font-size: 15px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--neutral-light);
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="number"]:focus, select:focus {
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(0, 135, 90, 0.1);
+        outline: none;
+    }
+    
+    .calc-btn {
+        padding: 10px 20px !important;
+        border-radius: 8px !important;
+        font-size: 15px;
+        font-weight: 600;
+        min-width: 140px;
+        margin-top: 10px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    }
+    .calc-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    /* Result Box Styling */
+    .result {
+        margin-top: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 15px;
+        border: 1px solid;
+        animation: resultFadeIn 0.5s ease-out;
+        display: none;
+    }
+    
+    @keyframes resultFadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Card Specific Styles */
+    .card[data-card-id*="credit"] { border-left-color: var(--primary-green); background-color: #EAF7EE; }
+    .card[data-card-id*="gold"], .card[data-card-id*="roi"] { border-left-color: var(--secondary-blue); background-color: #EBF5FF; }
+    .card[data-card-id*="insurance"], .card[data-card-id*="volatility"] { border-left-color: var(--warning-orange); background-color: #FFF8E6; }
+    .card[data-card-id*="pay"] { border-left-color: var(--pay-green); background-color: #EDF7F1; }
+    /* NEW FEATURE COLORS */
+    .card[data-card-id*="costs"] { border-left-color: var(--neutral-dark); background:#F7F7F7; }
+    .card[data-card-id*="loan"] { border-left-color: var(--secondary-blue); background-color: #EBF5FF; }
+    .card[data-card-id*="carbon"], .card[data-card-id*="esg"] { border-left-color: var(--sustainability-teal); background-color: #E6FAF6; }
